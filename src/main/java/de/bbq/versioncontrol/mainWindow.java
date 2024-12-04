@@ -1,12 +1,25 @@
 package de.bbq.versioncontrol;
 
-import java.io.IOException;
+import java.io.File;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 
-public class PrimaryController {
+public class mainWindow {
 
     @FXML
-    private void switchToSecondary() throws IOException {
-        App.setRoot("secondary");
+    private Button commitButton;
+
+    public static void commitMessage() {
+        
+    }
+
+    public void initialize() {
+        String filepath = System.getProperty("user.home") + "/Documents/versioncontrol/";
+        try {
+            File dir = new File(filepath);
+            dir.mkdir();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
