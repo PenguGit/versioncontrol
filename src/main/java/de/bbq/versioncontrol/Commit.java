@@ -11,13 +11,13 @@ import java.nio.file.Path;
  * @author qp
  */
 public class Commit {
-    private final Path repoPath;
+    private final String repoPath;
     private final String message;
     private final String hash;
     private final long timestamp;
     private final String parentHash;
 
-    public Commit(Path repoPath, String message, String parentHash) {
+    public Commit(String repoPath, String message, String parentHash) {
         this.repoPath = repoPath;
         this.parentHash = parentHash;
         this.hash = simpleHash();
@@ -25,7 +25,7 @@ public class Commit {
         this.timestamp = System.currentTimeMillis();
     }
 
-    public Path getRepoPath() {
+    public String getRepoPath() {
         return repoPath;
     }
 
