@@ -5,6 +5,7 @@
 package de.bbq.versioncontrol;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -28,8 +29,10 @@ public class gud {
 
     public gud(Path repoPath) {
         this.repoPath = repoPath;
-        this.gson = new Gson();
-        loadCommit();
+        this.gson = new GsonBuilder()
+                .registerTypeAdapter(Path.class, new PathAdapter())
+                .create();
+        //loadCommit();
     }
 
     public void init() throws IOException {
@@ -39,14 +42,13 @@ public class gud {
             Files.createDirectories(gudDir);
 
             if ((System.getProperty("os.name").toLowerCase()).contains("win")) {
-                DosFileAttributeView attributes = 
-                        Files.getFileAttributeView(
+                DosFileAttributeView attributes
+                        = Files.getFileAttributeView(
                                 gudDir,
                                 DosFileAttributeView.class
                         );
                 if (attributes != null) {
                     attributes.setHidden(true);
-                    System.out.println("Folder is now hidden!");
                 }
             }
 
@@ -57,41 +59,45 @@ public class gud {
     }
 
     private void saveCommit() {
-        Path commitFile = repoPath.resolve(".gud/commits.json");
+        System.out.println("Hi");
+        Path commitFile = repoPath.resolve("./commits.json");
         try (FileWriter writer = new FileWriter(commitFile.toFile())) {
             gson.toJson(commits, writer);
+            System.out.println("Yo");
         } catch (IOException e) {
+            System.err.println("Error saving/loading commit: " + e.getMessage());
             e.printStackTrace();
         }
     }
 
     private void loadCommit() {
-        Path commitedFile = repoPath.resolve(".gud/commits.json");
+        Path commitedFile = repoPath.resolve("./commits.json");
         if (Files.exists(commitedFile)) {
             try (FileReader reader = new FileReader(commitedFile.toFile())) {
                 commits.addAll(gson.fromJson(
-                    reader, 
-                    new TypeToken<List<Commit>>() {
+                        reader,
+                        new TypeToken<List<Commit>>() {
                         }.getType()
                 ));
-            } catch (IOException ee) {
-                ee.printStackTrace();
+            } catch (IOException e) {
+                System.err.println("Error saving/loading commit: " + e.getMessage());
+                e.printStackTrace();
             }
         }
     }
 
     public void commit(String commitMsg) {
-        if (!commits.isEmpty()) {
-            commits.add(
-                    new Commit(
-                            repoPath,
-                            commitMsg,
-                            commits
-                                    .getLast()
-                                    .getHash()
-                    )
-            );
-        } else {
+//        if (!commits.isEmpty()) {
+//            commits.add(
+//                    new Commit(
+//                            repoPath,
+//                            commitMsg,
+//                            commits
+//                                    .getLast()
+//                                    .getHash()
+//                    )
+//            );
+//        } else {
             commits.add(
                     new Commit(
                             repoPath,
@@ -99,7 +105,8 @@ public class gud {
                             "first"
                     )
             );
-        }
+           saveCommit();
+       // }
 
     }
 }

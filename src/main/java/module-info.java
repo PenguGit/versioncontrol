@@ -4,6 +4,6 @@ module de.bbq.versioncontrol {
     requires java.base;
     requires com.google.gson;
 
-    opens de.bbq.versioncontrol to javafx.fxml;
+    opens de.bbq.versioncontrol to javafx.fxml, com.google.gson;
     exports de.bbq.versioncontrol;
 }
