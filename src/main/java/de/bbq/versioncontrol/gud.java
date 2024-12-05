@@ -5,7 +5,6 @@
 package de.bbq.versioncontrol;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -29,9 +28,7 @@ public class gud {
 
     public gud(Path repoPath) {
         this.repoPath = repoPath;
-        this.gson = new GsonBuilder()
-                .registerTypeAdapter(Path.class, new PathAdapter())
-                .create();
+        this.gson = new Gson();
         //loadCommit();
     }
 

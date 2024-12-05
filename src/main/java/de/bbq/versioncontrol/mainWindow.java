@@ -25,6 +25,5 @@ public class mainWindow {
         gud repo = new gud(filePath);
         repo.init();
         repo.commit("ha");
-        
     }
 }
