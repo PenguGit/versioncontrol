@@ -1,6 +1,8 @@
 package de.bbq.versioncontrol;
 
-import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 
@@ -13,13 +15,15 @@ public class mainWindow {
         
     }
 
-    public void initialize() {
-        String filepath = System.getProperty("user.home") + "/Documents/versioncontrol/";
+    public void initialize() throws IOException {
+        Path filePath = Paths.get(System.getProperty("user.home"),"Documents", "versioncontrol");
         try {
-            File dir = new File(filepath);
-            dir.mkdir();
+            filePath = filePath.resolve(".gud");
         } catch (Exception e) {
             e.printStackTrace();
         }
+        gud repo = new gud(filePath);
+        repo.init();
+        repo.commit("ha");
     }
 }
