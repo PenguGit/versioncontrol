@@ -14,13 +14,16 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.attribute.DosFileAttributeView;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 
 /**
@@ -28,15 +31,25 @@ import java.util.TreeMap;
  * @author qp
  */
 public class repo {
+
+    public static final LinkedHashSet<String> localRepos = new LinkedHashSet<>();
     private final TreeMap<String, ArrayList<Index>> indexHistory = new TreeMap<>();
     private final Path repoPath;
     private final LinkedList<Commit> commits = new LinkedList<>();
     private final Gson gson;
     private final GudIgnore gIgnore;
     
-
+    public repo() throws IOException {
+        
+        repoPath = null;
+        this.gson = new GsonBuilder().setPrettyPrinting().create();
+        gIgnore = null;
+        loadlocalRepos();
+    }
+    
     public repo(Path repoPath) throws IOException {
         this.repoPath = repoPath;
+        localRepos.add(repoPath.toString());
         this.gson = new GsonBuilder().setPrettyPrinting().create();
         gIgnore = new GudIgnore(repoPath.resolve(".gudignore.txt").toFile());
         try {
@@ -56,8 +69,19 @@ public class repo {
             }
         } catch (IOException e) {
         }
+        loadlocalRepos();
         loadCommit();
-        loadIndices();
+        loadIndex();
+        saveArray(
+                localRepos,
+                Paths.get(
+                        System.getProperty("user.home"),
+                        "Documents")
+                        .resolve("localRepos.json"));
+    }
+
+    public Path getRepoPath() {
+        return repoPath;
     }
 
     private void indexDir() throws IOException {
@@ -73,16 +97,15 @@ public class repo {
         for (File file : dir.listFiles()) {
             Index fileState;
             String relativePath
-                        = repoPath.relativize(file.toPath()).toString();
-            if (gIgnore.isIgnored(relativePath)){
-                
+                    = repoPath.relativize(file.toPath()).toString();
+            if (gIgnore.isIgnored(relativePath)) {
+
             } else if (file.isDirectory()) {
                 for (Index index : traverseDir(file)) {
                     snapshot.add(index);
                 }
             } else {
                 String fileHash = fileHandler.hashFile(file);
-                System.out.println(relativePath);
                 fileState = new Index(relativePath, fileHash, fileHandler.readContent(file));
                 snapshot.add(fileState);
             }
@@ -94,21 +117,12 @@ public class repo {
         //Creating .repo
     }
 
-    private void saveCommits() {
-        Path commitFile = repoPath.resolve(".gud/commits.json");
+    private void saveArray(Object array, Path filePath) {
+        Path commitFile = filePath;
         try (FileWriter writer = new FileWriter(commitFile.toFile())) {
-            gson.toJson(commits, writer);
+            gson.toJson(array, writer);
         } catch (IOException e) {
-            System.err.println("Error saving/loading commit: " + e.getMessage());
-        }
-    }
-
-    private void saveIndices() {
-        Path commitFile = repoPath.resolve(".gud/index.json");
-        try (FileWriter writer = new FileWriter(commitFile.toFile())) {
-            gson.toJson(indexHistory, writer);
-        } catch (IOException e) {
-            System.err.println("Error saving/loading commit: " + e.getMessage());
+            System.err.println("Error saving "+ Object.class + ": " + e.getMessage());
         }
     }
 
@@ -122,12 +136,29 @@ public class repo {
                         }.getType()
                 ));
             } catch (IOException e) {
-                System.err.println("Error saving/loading commit: " + e.getMessage());
+                System.err.println("Error loading commits: " + e.getMessage());
             }
         }
     }
 
-    private void loadIndices() {
+    private void loadlocalRepos() {
+        Path commitedFile = Paths.get(System.getProperty("user.home"), "Documents", "localRepos.json");
+        if (Files.exists(commitedFile)) {
+            try (FileReader reader = new FileReader(commitedFile.toFile())) {
+                localRepos.addAll(gson.fromJson(
+                        reader,
+                        new TypeToken<Set<String>>() {
+                        }.getType()
+                ));
+                for (String repo : repo.localRepos) {
+        }
+            } catch (IOException e) {
+                System.err.println("Error loading Repos: " + e.getMessage());
+            }
+        }
+    }
+
+    private void loadIndex() {
         Path commitedFile = repoPath.resolve(".gud/index.json");
         if (Files.exists(commitedFile)) {
             try (FileReader reader = new FileReader(commitedFile.toFile())) {
@@ -137,7 +168,7 @@ public class repo {
                         }.getType()
                 ));
             } catch (IOException e) {
-                System.err.println("Error saving/loading commit: " + e.getMessage());
+                System.err.println("Error loading Indices: " + e.getMessage());
             }
         }
     }
@@ -164,8 +195,7 @@ public class repo {
             );
 
         }
-        saveIndices();
-        saveCommits();
-
+        saveArray(indexHistory, repoPath.resolve(".gud/index.json"));
+        saveArray(commits, repoPath.resolve(".gud/commits.json"));
     }
 }

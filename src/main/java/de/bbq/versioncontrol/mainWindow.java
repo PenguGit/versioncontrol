@@ -5,11 +5,15 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.DirectoryChooser;
+import javafx.stage.Stage;
 
 public class mainWindow {
+    private Stage secondaryStage;
     
     private Path filePath;
     @FXML
@@ -23,6 +27,8 @@ public class mainWindow {
     private TextField repoPathTF;
     @FXML
     private Button folderButton;
+    @FXML
+    private Button showLocRepos;
     
     @FXML
     private void chooseFolder () {
@@ -34,6 +40,21 @@ public class mainWindow {
         } else {
             repoPathTF.clear();
         }
+    }
+    
+    
+    @FXML
+    private void showlocalRepo() {
+         try {
+                secondaryStage = new Stage();
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("localRepoView.fxml"));
+                Scene scene = new Scene(loader.load());
+                secondaryStage.setScene(scene);
+                secondaryStage.show();
+                secondaryStage.setResizable(false);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
     }
     
     @FXML
@@ -53,6 +74,7 @@ public class mainWindow {
     
     
     public void initialize() throws IOException {
+        repo pleaseIgnore = new repo();
         filePath = Paths.get(System.getProperty("user.home"), "Documents");
     }
 }
