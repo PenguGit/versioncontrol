@@ -4,8 +4,6 @@
  */
 package de.bbq.versioncontrol;
 
-import java.nio.file.Path;
-
 /**
  *
  * @author qp
