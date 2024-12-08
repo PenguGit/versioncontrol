@@ -4,9 +4,12 @@
  */
 package de.bbq.versioncontrol;
 
+import de.bbq.utils.fileHandler;
+import java.io.IOException;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 
 /**
@@ -14,17 +17,26 @@ import javafx.scene.control.ListView;
  *
  * @author qp
  */
-public class LocalRepoViewController {
+public class LocalRepoView {
 
     @FXML
     private ListView<String> localrepoView;
+    @FXML
+    private Button backButton;
+    @FXML
+    private Button chooseRepo;
 
     /**
      * Initializes the controller class.
      */
     
+    @FXML
+    private void backButton() throws IOException {
+        App.setRoot("startWindow", 233, 133);
+    }
+    
     public void initialize() {
-        ObservableList<String> items = FXCollections.observableArrayList(repo.localRepos);
+        ObservableList<String> items = FXCollections.observableArrayList(fileHandler.localRepos);
         localrepoView.setItems(items);
     }    
     

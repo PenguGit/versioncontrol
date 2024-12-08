@@ -5,5 +5,6 @@ module de.bbq.versioncontrol {
     requires com.google.gson;
 
     opens de.bbq.versioncontrol to javafx.fxml, com.google.gson;
+    opens de.bbq.utils to javafx.fxml, com.google.gson;
     exports de.bbq.versioncontrol;
 }

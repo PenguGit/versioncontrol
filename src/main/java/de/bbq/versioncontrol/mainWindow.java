@@ -13,11 +13,12 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 
 public class mainWindow {
+
     private Stage secondaryStage;
-    
+
     private Path filePath;
     @FXML
-    private Button commitButton;
+    private Button backButton;
 
     public static void commitMessage() {
     }
@@ -29,9 +30,9 @@ public class mainWindow {
     private Button folderButton;
     @FXML
     private Button showLocRepos;
-    
+
     @FXML
-    private void chooseFolder () {
+    private void chooseFolder() {
         DirectoryChooser dC = new DirectoryChooser();
         dC.setInitialDirectory(filePath.toFile());
         File selectedDir = dC.showDialog(null);
@@ -41,24 +42,23 @@ public class mainWindow {
             repoPathTF.clear();
         }
     }
-    
-    
+
     @FXML
     private void showlocalRepo() {
-         try {
-                secondaryStage = new Stage();
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("localRepoView.fxml"));
-                Scene scene = new Scene(loader.load());
-                secondaryStage.setScene(scene);
-                secondaryStage.show();
-                secondaryStage.setResizable(false);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        try {
+            secondaryStage = new Stage();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("localRepoView.fxml"));
+            Scene scene = new Scene(loader.load());
+            secondaryStage.setScene(scene);
+            secondaryStage.show();
+            secondaryStage.setResizable(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
-    
+
     @FXML
-    private void initChosenRepo () throws IOException {
+    private void initChosenRepo() throws IOException {
         try {
             if (!repoPathTF.getText().isEmpty()) {
                 filePath = Paths.get(repoPathTF.getText());
@@ -69,12 +69,16 @@ public class mainWindow {
         } catch (Exception e) {
             repoPathTF.setPromptText("Not a valid location.");
         }
-        
+
     }
-    
-    
+
+    @FXML
+    private void backButton() throws IOException {
+        App.setRoot("startWindow", 233, 133);
+    }
+
     public void initialize() throws IOException {
-        repo pleaseIgnore = new repo();
+
         filePath = Paths.get(System.getProperty("user.home"), "Documents");
     }
 }

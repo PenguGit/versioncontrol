@@ -6,7 +6,7 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="170.0" prefWidth="297.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.bbq.versioncontrol.mainWindow">
    <children>
-      <Button fx:id="commitButton" layoutX="19.0" layoutY="108.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="70.0" text="Commit" />
+      <Button fx:id="backButton" layoutX="19.0" layoutY="108.0" mnemonicParsing="false" onAction="#backButton" prefHeight="26.0" prefWidth="70.0" text="Back" />
       <Button fx:id="initRepo" layoutX="206.0" layoutY="48.0" mnemonicParsing="false" onAction="#initChosenRepo" prefHeight="26.0" prefWidth="70.0" text="Init Repo" />
       <TextField fx:id="repoPathTF" editable="false" layoutX="19.0" layoutY="22.0" prefHeight="26.0" prefWidth="258.0" />
       <Button fx:id="folderButton" layoutX="19.0" layoutY="48.0" mnemonicParsing="false" onAction="#chooseFolder" prefHeight="26.0" prefWidth="59.0" text="Folder" />
