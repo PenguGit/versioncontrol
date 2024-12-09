@@ -1,5 +1,6 @@
 package de.bbq.versioncontrol;
 
+import de.bbq.utils.fileHandler;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -65,7 +66,14 @@ public class mainWindow {
             } else {
                 return;
             }
+//            if (fileHandler.localRepos.contains(filePath.toString())) {
+//                System.out.println("This repository already exists.");
+//            } else {
+//                repo repo = new repo(filePath);
+//            }
             repo repo = new repo(filePath);
+            fileHandler.initRepoFiles(filePath);
+            repo.commit("Initialize");
         } catch (Exception e) {
             repoPathTF.setPromptText("Not a valid location.");
         }

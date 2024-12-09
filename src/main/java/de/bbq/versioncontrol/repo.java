@@ -27,22 +27,21 @@ import java.util.TreeMap;
 public class repo {
 
     private final TreeMap<String, ArrayList<Index>> indexHistory = new TreeMap<>();
-    private final Path repoPath;
     private final LinkedList<Commit> commits = new LinkedList<>();
-    
+    private final Path repoPath;
+
     public repo(Path repoPath) throws IOException {
         this.repoPath = repoPath;
-//        loadCommit();
-//        loadIndex();
-        fileHandler.initRepoFiles(repoPath);
-        commit("Initialize");
-        fileHandler.saveArray(fileHandler.localRepos,
-                Paths.get(
-                        System.getProperty("user.home"),
-                        "Documents")
-                        .resolve("localRepos.json"));
+    }
+    
+    public TreeMap<String, ArrayList<Index>> getIndexHistory() {
+        return indexHistory;
     }
 
+    public LinkedList<Commit> getCommits() {
+        return commits;
+    }
+    
     public Path getRepoPath() {
         return repoPath;
     }
@@ -77,9 +76,7 @@ public class repo {
         return snapshot;
     }
 
-   
-
-    private void loadCommit() {
+    public void loadCommit() {
         Path commitedFile = repoPath.resolve(".gud/commits.json");
         if (Files.exists(commitedFile)) {
             try (FileReader reader = new FileReader(commitedFile.toFile())) {
@@ -94,7 +91,7 @@ public class repo {
         }
     }
 
-    private void loadIndex() {
+    public void loadIndex() {
         Path commitedFile = repoPath.resolve(".gud/index.json");
         if (Files.exists(commitedFile)) {
             try (FileReader reader = new FileReader(commitedFile.toFile())) {

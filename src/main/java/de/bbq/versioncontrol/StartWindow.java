@@ -24,6 +24,7 @@ public class StartWindow {
     /**
      * Initializes the controller class.
      */
+    
     @FXML
     private void createNewRepoWindow() throws IOException {
         App.setRoot("mainWindow", 308,200);
@@ -36,6 +37,6 @@ public class StartWindow {
     
     public void initialize() {
         fileHandler.loadlocalRepos();
+        System.out.println("Hallo");
     }    
-    
 }

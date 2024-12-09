@@ -35,9 +35,22 @@ public class LocalRepoView {
         App.setRoot("startWindow", 233, 133);
     }
     
+    @FXML
+    private void chooseRepo() throws IOException {
+        String selectedRepo = localrepoView.getSelectionModel().getSelectedItem();
+        if (selectedRepo != null) {
+            WorkingRepo.grabRepo(selectedRepo);
+        }
+        App.setRoot("WorkingRepo", 800, 400);
+    }
+    
     public void initialize() {
         ObservableList<String> items = FXCollections.observableArrayList(fileHandler.localRepos);
         localrepoView.setItems(items);
+        chooseRepo.setDisable(true);
+        localrepoView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            chooseRepo.setDisable(newValue == null); // Disable if nothing is selected
+        });
     }    
     
 }

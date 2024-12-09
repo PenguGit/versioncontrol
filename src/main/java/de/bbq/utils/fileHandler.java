@@ -27,12 +27,18 @@ import java.util.Set;
  * @author qp
  */
 public class fileHandler {
+
     private static final HashSet<String> gudIgnore = new HashSet<>();
     public static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     public static final LinkedHashSet<String> localRepos = new LinkedHashSet<>();
 
     public static String hashFile(File file) throws IOException {
         long checksum = 0;
+
+        String filename = file.getName();
+        for (char ch : filename.toCharArray()) {
+            checksum += (int) ch; // Convert char to int and add
+        }
 
         try (FileInputStream fis = new FileInputStream(file)) {
             int byteData;
@@ -43,7 +49,8 @@ public class fileHandler {
         // Convert the checksum to a hexadecimal string
         return Long.toHexString(checksum);
     }
-
+    
+    
     public static String readContent(File file) throws IOException {
         StringBuilder sB = new StringBuilder();
         try (BufferedReader input = new BufferedReader(new FileReader(file))) {
@@ -74,6 +81,11 @@ public class fileHandler {
                 }
             }
             localRepos.add(repoPath.toString());
+            saveArray(localRepos,
+                    Paths.get(
+                            System.getProperty("user.home"),
+                            "Documents")
+                            .resolve("localRepos.json"));
         } catch (IOException e) {
             System.out.println("lul");
         }
@@ -84,15 +96,15 @@ public class fileHandler {
         String relativePath = repoPath.relativize(repoPath.resolve(".gud")).toString();
         String initText = relativePath + "\n" + ".gudignore.txt";
         try {
-           file.createNewFile();
-           Files.writeString(file.toPath(), initText);
+            file.createNewFile();
+            Files.writeString(file.toPath(), initText);
             String[] ignoredFiles = fileHandler.readContent(file).split("\n");
             gudIgnore.addAll(Arrays.asList(ignoredFiles));
         } catch (IOException e) {
 
         }
     }
-    
+
     public static boolean isIgnored(String file) {
         String relPath = file.replace("\\", "/");
         for (String str : gudIgnore) {
@@ -126,7 +138,5 @@ public class fileHandler {
             System.err.println("Error saving " + Object.class + ": " + e.getMessage());
         }
     }
-    
-            
-    
+
 }
