@@ -13,6 +13,8 @@
       <Label layoutX="28.0" layoutY="6.0" text="Commit History:" />
       <Label layoutX="386.0" layoutY="6.0" text="Affected Files:" />
       <Label layoutX="28.0" layoutY="33.0" prefHeight="17.0" prefWidth="35.0" text="Date:" />
-      <Label layoutX="172.0" layoutY="33.0" text="Commit-Message:" />
+      <Label layoutX="160.0" layoutY="33.0" text="Commit-Message:" />
+      <ListView fx:id="affectedList" layoutX="347.0" layoutY="50.0" prefHeight="200.0" prefWidth="200.0" />
+      <Button fx:id="chooseCommit" layoutX="37.0" layoutY="250.0" mnemonicParsing="false" onAction="#chooseCommit" text="Choose" />
    </children>
 </AnchorPane>

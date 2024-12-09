@@ -11,9 +11,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -33,7 +30,7 @@ public class repo {
     public repo(Path repoPath) throws IOException {
         this.repoPath = repoPath;
     }
-    
+
     public TreeMap<String, ArrayList<Index>> getIndexHistory() {
         return indexHistory;
     }
@@ -41,22 +38,15 @@ public class repo {
     public LinkedList<Commit> getCommits() {
         return commits;
     }
-    
+
     public Path getRepoPath() {
         return repoPath;
     }
 
-    private void indexDir() throws IOException {
-        File repo = new File(repoPath.toString());
-        if (!repo.exists() || !repo.isDirectory()) {
-            throw new IllegalArgumentException("Invalid repository path");
-        }
-        indexHistory.put(String.valueOf(LocalDateTime.now().toEpochSecond(ZoneOffset.UTC)), traverseDir(repo));
-    }
+    private ArrayList<Index> traverseDir(File repo) throws IOException {
 
-    private ArrayList<Index> traverseDir(File dir) throws IOException {
         ArrayList<Index> snapshot = new ArrayList<>();
-        for (File file : dir.listFiles()) {
+        for (File file : repo.listFiles()) {
             Index fileState;
             String relativePath
                     = repoPath.relativize(file.toPath()).toString();
@@ -107,27 +97,19 @@ public class repo {
     }
 
     public final void commit(String commitMsg) throws IOException {
-        indexDir();
+        Commit commit;
         if (!commits.isEmpty()) {
-            commits.add(
-                    new Commit(
-                            repoPath.toString(),
-                            commitMsg,
-                            commits
-                                    .getLast()
-                                    .getHash()
-                    )
-            );
+            commit = new Commit(repoPath.toString(), commitMsg,"test");
+            commits.add(commit);
         } else {
-            commits.add(
-                    new Commit(
-                            repoPath.toString(),
-                            commitMsg,
-                            "001"
-                    )
-            );
-
+            commit = new Commit(repoPath.toString(), commitMsg, "001");
+            commits.add(commit);
         }
+        File repo = new File(repoPath.toString());
+        if (!repo.exists() || !repo.isDirectory()) {
+            throw new IllegalArgumentException("Invalid repository path");
+        }
+        indexHistory.put(commit.getHash(), traverseDir(repo));
         fileHandler.saveArray(indexHistory, repoPath.resolve(".gud/index.json"));
         fileHandler.saveArray(commits, repoPath.resolve(".gud/commits.json"));
     }

@@ -4,9 +4,6 @@
  */
 package de.bbq.versioncontrol;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 /**
  *
  * @author qp
@@ -15,7 +12,7 @@ public class Commit {
     private final String path;
     private final String message;
     private final String hash;
-    private final String timestamp;
+    private final long timestamp;
     private final String parentHash;
 
     public Commit(String repoPath, String message, String parentHash) {
@@ -23,8 +20,7 @@ public class Commit {
         this.parentHash = parentHash;
         this.hash = simpleHash();
         this.message = message;
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-        this.timestamp = formatter.format(new Date(System.currentTimeMillis()));
+        this.timestamp = System.currentTimeMillis();
     }
 
     public String getPath() {
@@ -35,7 +31,7 @@ public class Commit {
         return message;
     }
 
-    public String getTimestamp() {
+    public long getTimestamp() {
         return timestamp;
     }
 

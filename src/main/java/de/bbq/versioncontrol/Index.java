@@ -4,9 +4,6 @@
  */
 package de.bbq.versioncontrol;
 
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-
 /**
  *
  * @author qp
@@ -15,14 +12,14 @@ public class Index {
 
     private final String filePath;
     private final String hash;
-    private final long date;
+    //private final long date;
     private String content;
 
     public Index(String filePath, String hash, String content) {
         this.content = content;
         this.filePath = filePath;
         this.hash = hash;
-        date = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
+        //date = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
     }
 
     public String getFilePath() {
@@ -33,10 +30,6 @@ public class Index {
         return hash;
     }
 
-    public long getDate() {
-        return date;
-    }
-    
     public String getContent() {
         return content;
     }
