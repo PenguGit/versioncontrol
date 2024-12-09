@@ -108,6 +108,7 @@ public class fileHandler {
     public static boolean isIgnored(String file) {
         String relPath = file.replace("\\", "/");
         for (String str : gudIgnore) {
+            System.out.println(str);
             if ((str.contains(relPath))) {
                 return true;
             }

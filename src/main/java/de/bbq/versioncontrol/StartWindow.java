@@ -37,6 +37,5 @@ public class StartWindow {
     
     public void initialize() {
         fileHandler.loadlocalRepos();
-        System.out.println("Hallo");
     }    
 }

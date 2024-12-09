@@ -50,9 +50,8 @@ public class repo {
             Index fileState;
             String relativePath
                     = repoPath.relativize(file.toPath()).toString();
-            System.out.println(relativePath);
             if (fileHandler.isIgnored(relativePath)) {
-
+                System.out.println("Hi");
             } else if (file.isDirectory()) {
                 for (Index index : traverseDir(file)) {
                     snapshot.add(index);
@@ -99,7 +98,7 @@ public class repo {
     public final void commit(String commitMsg) throws IOException {
         Commit commit;
         if (!commits.isEmpty()) {
-            commit = new Commit(repoPath.toString(), commitMsg,"test");
+            commit = new Commit(repoPath.toString(), commitMsg, commits.getLast().getHash());
             commits.add(commit);
         } else {
             commit = new Commit(repoPath.toString(), commitMsg, "001");
@@ -110,6 +109,7 @@ public class repo {
             throw new IllegalArgumentException("Invalid repository path");
         }
         indexHistory.put(commit.getHash(), traverseDir(repo));
+        System.out.println(repo);
         fileHandler.saveArray(indexHistory, repoPath.resolve(".gud/index.json"));
         fileHandler.saveArray(commits, repoPath.resolve(".gud/commits.json"));
     }

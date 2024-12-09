@@ -10,6 +10,6 @@
       <Button fx:id="initRepo" layoutX="206.0" layoutY="48.0" mnemonicParsing="false" onAction="#initChosenRepo" prefHeight="26.0" prefWidth="70.0" text="Init Repo" />
       <TextField fx:id="repoPathTF" editable="false" layoutX="19.0" layoutY="22.0" prefHeight="26.0" prefWidth="258.0" />
       <Button fx:id="folderButton" layoutX="19.0" layoutY="48.0" mnemonicParsing="false" onAction="#chooseFolder" prefHeight="26.0" prefWidth="59.0" text="Folder" />
-      <Button fx:id="showLocRepos" layoutX="165.0" layoutY="108.0" mnemonicParsing="false" onAction="#showlocalRepo" text="Show Local Repos" />
+      <Button fx:id="showLocRepos" layoutX="165.0" layoutY="108.0" mnemonicParsing="false" onAction="#localRepoWindow" text="Show Local Repos" />
    </children>
 </AnchorPane>

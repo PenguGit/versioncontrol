@@ -45,17 +45,8 @@ public class mainWindow {
     }
 
     @FXML
-    private void showlocalRepo() {
-        try {
-            secondaryStage = new Stage();
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("localRepoView.fxml"));
-            Scene scene = new Scene(loader.load());
-            secondaryStage.setScene(scene);
-            secondaryStage.show();
-            secondaryStage.setResizable(false);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    private void localRepoWindow() throws IOException {
+        App.setRoot("localRepoView",265,420);
     }
 
     @FXML
