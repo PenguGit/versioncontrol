@@ -32,7 +32,7 @@ public class StartWindow {
     
     @FXML
     private void localRepoWindow() throws IOException {
-        App.setRoot("localRepoView",265,420);
+        App.setRoot("localRepoView",345,420);
     }
     
     public void initialize() {

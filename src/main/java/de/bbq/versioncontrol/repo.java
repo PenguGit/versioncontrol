@@ -6,12 +6,14 @@ package de.bbq.versioncontrol;
 
 import com.google.gson.reflect.TypeToken;
 import de.bbq.utils.fileHandler;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -22,7 +24,7 @@ import java.util.TreeMap;
  * @author qp
  */
 public class repo {
-
+    private static final HashSet<String> gudIgnore = new HashSet<>();
     private final TreeMap<String, ArrayList<Index>> indexHistory = new TreeMap<>();
     private final LinkedList<Commit> commits = new LinkedList<>();
     private final Path repoPath;
@@ -50,8 +52,7 @@ public class repo {
             Index fileState;
             String relativePath
                     = repoPath.relativize(file.toPath()).toString();
-            if (fileHandler.isIgnored(relativePath)) {
-                System.out.println("Hi");
+            if (isIgnored(relativePath)) {
             } else if (file.isDirectory()) {
                 for (Index index : traverseDir(file)) {
                     snapshot.add(index);
@@ -79,11 +80,34 @@ public class repo {
             }
         }
     }
-
+    public void loadIgnore() {
+        Path ignoreFile = repoPath.resolve("./.gudignore.txt");
+        if (Files.exists(ignoreFile)) {
+            try (BufferedReader reader = new BufferedReader(new FileReader(ignoreFile.toFile()))) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    gudIgnore.add(line);
+                }
+            } catch (IOException e) {
+                System.err.println("Error loading gudignore: " + e.getMessage());
+            }
+        }
+    }
+    public static boolean isIgnored(String file) {
+        String relPath = file.replace("\\", "/");
+        for (String str : gudIgnore) {
+            System.out.println(str);
+            if ((str.contains(relPath))) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
     public void loadIndex() {
-        Path commitedFile = repoPath.resolve(".gud/index.json");
-        if (Files.exists(commitedFile)) {
-            try (FileReader reader = new FileReader(commitedFile.toFile())) {
+        Path indexFile = repoPath.resolve(".gud/index.json");
+        if (Files.exists(indexFile)) {
+            try (FileReader reader = new FileReader(indexFile.toFile())) {
                 indexHistory.putAll(fileHandler.gson.fromJson(
                         reader,
                         new TypeToken<Map<String, ArrayList<Index>>>() {
@@ -109,7 +133,6 @@ public class repo {
             throw new IllegalArgumentException("Invalid repository path");
         }
         indexHistory.put(commit.getHash(), traverseDir(repo));
-        System.out.println(repo);
         fileHandler.saveArray(indexHistory, repoPath.resolve(".gud/index.json"));
         fileHandler.saveArray(commits, repoPath.resolve(".gud/commits.json"));
     }

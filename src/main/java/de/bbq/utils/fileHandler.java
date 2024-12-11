@@ -17,10 +17,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.DosFileAttributeView;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import javafx.scene.control.Alert;
 
 /**
  *
@@ -28,7 +27,6 @@ import java.util.Set;
  */
 public class fileHandler {
 
-    private static final HashSet<String> gudIgnore = new HashSet<>();
     public static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     public static final LinkedHashSet<String> localRepos = new LinkedHashSet<>();
 
@@ -49,8 +47,7 @@ public class fileHandler {
         // Convert the checksum to a hexadecimal string
         return Long.toHexString(checksum);
     }
-    
-    
+
     public static String readContent(File file) throws IOException {
         StringBuilder sB = new StringBuilder();
         try (BufferedReader input = new BufferedReader(new FileReader(file))) {
@@ -98,22 +95,9 @@ public class fileHandler {
         try {
             file.createNewFile();
             Files.writeString(file.toPath(), initText);
-            String[] ignoredFiles = fileHandler.readContent(file).split("\n");
-            gudIgnore.addAll(Arrays.asList(ignoredFiles));
         } catch (IOException e) {
 
         }
-    }
-
-    public static boolean isIgnored(String file) {
-        String relPath = file.replace("\\", "/");
-        for (String str : gudIgnore) {
-            System.out.println(str);
-            if ((str.contains(relPath))) {
-                return true;
-            }
-        }
-        return false;
     }
 
     public static void loadlocalRepos() {
@@ -138,6 +122,14 @@ public class fileHandler {
         } catch (IOException e) {
             System.err.println("Error saving " + Object.class + ": " + e.getMessage());
         }
+    }
+
+    public static void showAlert(Alert.AlertType alertType, String title, String headerText, String contentText) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setHeaderText(headerText);
+        alert.setContentText(contentText);
+        alert.showAndWait();
     }
 
 }
